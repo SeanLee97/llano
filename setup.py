@@ -34,7 +34,10 @@ setup(
     platforms=['all'],
     url='https://github.com/SeanLee97/LLMAnnotator',
     packages=find_packages(exclude=('test*', )),
-    package_data={'': ['*.txt', '*.jinja']},
+    package_data={
+        '': ['*.txt', '*.jinja'],
+        'llm_annotator': ['templates/texts/*.jinja']
+    },
     classifiers=[
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
