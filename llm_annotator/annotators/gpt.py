@@ -71,7 +71,9 @@ class GPTAnnotator(BaseAnnotator):
         ret = self.model.predict(prompt)
         ret['text'] = text
         entity_map = {}
-        for match in re.finditer(r'\((?P<entity>.+?)\,\s*(?P<entity_type>.+?)\s*\)', ret['response']):
+        for match in re.finditer(
+            r'\((?P<entity>((?!\)).)+?)\,\s*(?P<entity_type>(%s))\s*\)' % '|'.join(
+                [re.escape(k) for k in self.label_mapping]), ret['response']):
             entity, entity_type = match.group('entity'), match.group('entity_type')
             entity = re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', entity)
             entity_type = re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', entity_type)
