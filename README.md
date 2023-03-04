@@ -1,18 +1,18 @@
-<h1 align='center'>LLMAnnotator</h1>
+<p align='center'><img src='docs/LANNO-LOGO.png' style='width: 200px; height: 200px'/></p>
 
-<p align='center'>Let Large Language Models Serve As Data Annotators.</p>
+<p align='center'>Let Large <strong style='color: #0a93f5'>Lan</strong>guage Models Serve As Data <strong style='color: #0a93f5'>Anno</strong>tators.</p>
 
 
 # Installation
 
 stable
 ```
-python -m pip install -U LLMAnnotator
+python -m pip install -U lanno
 ```
 
 latest
 ```
-python -m pip install git+https://github.com/SeanLee97/LLMAnnotator.git
+python -m pip install git+https://github.com/SeanLee97/lanno.git
 ```
 
 
@@ -44,8 +44,8 @@ python -m pip install git+https://github.com/SeanLee97/LLMAnnotator.git
 ### English Example
 
 ```python
-from llm_annotator.config import Tasks, Languages, OpenAIModels, NERFormatter
-from llm_annotator import GPTModel, GPTAnnotator
+from lanno.config import Tasks, Languages, OpenAIModels, NERFormatter
+from lanno import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())
@@ -95,8 +95,8 @@ ret = annotator(doc, formatter=NERFormatter.BIO)  # w/ formatter
 ### Chinese Example
 
 ```python
-from llm_annotator.config import Tasks, Languages, OpenAIModels, NERFormatter
-from llm_annotator import GPTModel, GPTAnnotator
+from lanno.config import Tasks, Languages, OpenAIModels, NERFormatter
+from lanno import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())
