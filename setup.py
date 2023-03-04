@@ -34,7 +34,7 @@ setup(
     platforms=['all'],
     url='https://github.com/SeanLee97/LLMAnnotator',
     packages=find_packages(exclude=('test*', )),
-    package_data={'': ['*.txt', '*.pickle']},
+    package_data={'': ['*.txt', '*.jinja']},
     classifiers=[
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
