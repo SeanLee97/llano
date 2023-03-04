@@ -44,12 +44,13 @@ python -m pip install git+https://github.com/SeanLee97/LLMAnnotator.git
 ### English Example
 
 ```python
-from llm_annotator.config import Tasks, Languages, NERFormatter
+from llm_annotator.config import Tasks, Languages, OpenAIModels, NERFormatter
 from llm_annotator import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())
 print('All Supported NERFormatter:', NERFormatter.list_attributes())
+print('All Supported OpenAIModels:', OpenAIModels.list_attributes())
 
 api_key = 'Your API Key'
 model = GPTModel(api_key, model=OpenAIModels.ChatGPT)
@@ -68,7 +69,7 @@ ret = annotator(doc, formatter=NERFormatter.BIO)  # w/ formatter
 ```
 
 <details>
-<summary>click to show the result.</summary>
+<summary>Click to show the result.</summary>
 
 ```python
 {'prompt': 'You are a NER (Named-entity recognition) system, please help me with the NER task.\nTask: extract the entities and corresponding entity types from a given sentence.\nOnly support 4 entity types, including: people,location,company,organization.\nOutput format: (entity, entity_type).\n\nFollowing is the given sentence: Elon Reeve Musk FRS (/ˈiːlɒn/ EE-lon; born June 28, 1971) is a business magnate and investor. He is the founder, CEO and chief engineer of SpaceX; angel investor, CEO and product architect of Tesla, Inc.; owner and CEO of Twitter, Inc.; founder of The Boring Company; co-founder of Neuralink and OpenAI; and president of the philanthropic Musk Foundation. \nOutput:',
@@ -94,12 +95,13 @@ ret = annotator(doc, formatter=NERFormatter.BIO)  # w/ formatter
 ### Chinese Example
 
 ```python
-from llm_annotator.config import Tasks, Languages, NERFormatter
+from llm_annotator.config import Tasks, Languages, OpenAIModels, NERFormatter
 from llm_annotator import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())
 print('All Supported NERFormatter:', NERFormatter.list_attributes())
+print('All Supported OpenAIModels:', OpenAIModels.list_attributes())
 
 api_key = 'Your API Key'
 model = GPTModel(api_key, model=OpenAIModels.ChatGPT)
@@ -118,7 +120,7 @@ ret = annotator(doc, formatter=NERFormatter.BIO)  # w/ formatter
 ```
 
 <details>
-<summary>click to show the result.</summary>
+<summary>Click to show the result.</summary>
 
 ```python
 {'prompt': '你是一个 NER 系统，请帮我完成中文 NER 任务。\n任务要求如下：找到句子中的实体，并返回实体及实体类型。\n支持的实体类型仅限4类：人名、地名、公司名、机构名。\n输出格式要求：(实体, 实体类型)。\n\n以下是输入句子：埃隆·里夫·马斯克（Elon Reeve Musk） [107]  ，1971年6月28日出生于南非的行政首都比勒陀利亚，企业家、工程师、慈善家、美国国家工程院院士。他同时兼具南非、加拿大和美国三重国籍。埃隆·马斯克本科毕业于宾夕法尼亚大学，获经济学和物理学双学位。1995年至2002年，马斯克与合伙人先后办了三家公司，分别是在线内容出版软件“Zip2”、电子支付“X.com”和“PayPal”。\n输出：',
