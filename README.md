@@ -3,6 +3,18 @@
 <p align='center'>Let Large <strong style='color: #0a93f5'>Lan</strong>guage Models Serve As Data <strong style='color: #0a93f5'>Anno</strong>tators.</p>
 
 
+ <h4 align="center">
+  <a href="https://github.com/SeanLee97/lanno/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="lanno is released under the Apache 2.0 license." />
+  </a>
+  <a href="https://pypi.org/project/lanno/">
+    <img src="https://badge.fury.io/py/lanno.svg" alt="PyPI version" />
+  </a>
+  <a href="http://makeapullrequest.com">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="http://makeapullrequest.com" />
+  </a>
+</h4>
+
 # Installation
 
 stable
