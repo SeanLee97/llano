@@ -1,4 +1,4 @@
-<p align='center'><img src='docs/LANNO-LOGO.png' style='width: 200px; height: 200px'/></p>
+<p align='center'><img src='docs/LANNO-LOGO.png' style='width: 300px; height: 3 00px'/></p>
 
 <p align='center'>Let Large <strong style='color: #0a93f5'>Lan</strong>guage Models Serve As Data <strong style='color: #0a93f5'>Anno</strong>tators.</p>
 
