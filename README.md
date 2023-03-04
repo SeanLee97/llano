@@ -68,6 +68,10 @@ ret = annotator(doc)  # w/o formatter
 ret = annotator(doc, formatter=NERFormatter.BIO)  # w/ formatter
 ```
 
+`result` is the annotation result. `formatted_result` is the formatted result. 
+
+💡Tip: if you want to train your domain model, the formatted result can be used for further training or annotation refinement.
+ 
 <details>
 <summary>Click to show the result.</summary>
 
