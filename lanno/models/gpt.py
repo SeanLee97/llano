@@ -54,15 +54,17 @@ class GPTModel(BaseModel):
             raise ValueError(
                 f'OOT (Out Of Tokens)! the current input text has `{len(tokens)}` tokens, '
                 'which is greater than the max_tokens {self.max_tokens}')
-        data = {}
-        data['prompt'] = text
+        data = self.get_output_template()
+        data['request'] = {'prompt': text}
+        meta = {}
         if self.model == OpenAIModels.ChatGPT:
             resp = self._predict(messages=[{"role": "user", "content": text}],
                                  max_tokens=self.max_tokens - len(tokens))
             data["response"] = resp["choices"][0]["message"]["content"]
-            data["role"] = resp["choices"][0]["message"]["role"]
+            meta["role"] = resp["choices"][0]["message"]["role"]
         else:
             resp = self._predict(prompt=text, max_tokens=self.max_tokens - len(tokens))
             data["response"] = resp["choices"][0]["text"]
-        data.update(resp["usage"])
+        meta.update(resp["usage"])
+        data['meta'] = meta
         return data
