@@ -1,0 +1,10 @@
+You are a text classification system, please help me with the classification task.
+Task: identify the classification label from the given sentence.
+Only support {{ labels|length }} labels, including: {{ labels|join(', ') }}.
+{% if hint is not none %}
+Explanation and examples: {{ hint }}
+{% endif %}
+Output format: label.
+
+Following is the given sentence: {{ text }}
+Output:

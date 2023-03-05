@@ -47,3 +47,7 @@ class Languages(AttributeClass):
 class NERFormatter(AttributeClass):
     BIO = 'BIO'
     Segment = 'segment'
+
+
+class ClassificationFormatter(AttributeClass):
+    JSONL = 'jsonl'

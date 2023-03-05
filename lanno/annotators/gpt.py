@@ -2,12 +2,13 @@
 
 import os
 import re
+import json
 from copy import deepcopy
 from typing import Dict, Optional, List, Tuple
 
 from jinja2 import Template
 
-from ..config import Tasks, Languages, TEMPLATE_DIR, NERFormatter
+from ..config import Tasks, Languages, TEMPLATE_DIR, NERFormatter, ClassificationFormatter
 from ..models import GPTModel
 from .base import BaseAnnotator
 
@@ -70,6 +71,12 @@ class GPTAnnotator(BaseAnnotator):
             r'.*?(?P<entity_type>(%s)).*?\)' % '|'.join(  # entity_type
                 [re.escape(k) for k in labels]))
 
+    @staticmethod
+    def make_classification_extraction_regex(labels):
+        return re.compile(
+            r'(%s)+' % '|'.join([re.escape(label) for label in labels])
+        )
+
     def ner(self, text: str, hint: Optional[str] = None, formatter: Optional[NERFormatter] = None):
         if formatter is not None and formatter not in NERFormatter.values():
             raise ValueError(
@@ -112,10 +119,40 @@ class GPTAnnotator(BaseAnnotator):
                     ret['result']['text'], ret['result']['entities'])
         return ret
 
+    def classification(self,
+                       text: str,
+                       hint: Optional[str] = None,
+                       formatter: Optional[ClassificationFormatter] = None):
+        if formatter is not None and formatter not in ClassificationFormatter.values():
+            raise ValueError(
+                f'Invalid formatter `{formatter}`, '
+                'please specify formatter from ClassificationFormatter for the NER task.')
+        prompt = self.template.render(
+            labels=list(self.label_mapping.keys()),
+            text=text,
+            hint=hint)
+        resp = self.model.predict(prompt)
+        ret = deepcopy(resp)
+        ret['result'] = {}
+        ret['result']['text'] = text
+        label_regex = self.make_classification_extraction_regex(list(self.label_mapping.keys()))
+        labels = label_regex.findall(ret['response'])
+        if not labels:
+            return ret
+        label = labels[0]
+        ret['result']['label'] = label
+        if formatter is not None:
+            if formatter == ClassificationFormatter.JSONL:
+                ret['result']['formatted_result'] = json.dumps(
+                    {'text': ret['result']['text'], 'label': ret['result']['label']}, ensure_ascii=False)
+        return ret
+
     def tag(self, text: str, hint: Optional[str] = None, formatter=None):
         text = text.replace('\n', '')
         if self.task == Tasks.NER:
             return self.ner(text, hint=hint, formatter=formatter)
+        elif self.task == Tasks.Classification:
+            return self.classification(text, hint=hint, formatter=formatter)
 
     def __call__(self, text: str, hint: Optional[str] = None, formatter=None):
         return self.tag(text, hint=hint, formatter=formatter)
