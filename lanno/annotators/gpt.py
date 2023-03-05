@@ -80,7 +80,8 @@ class GPTAnnotator(BaseAnnotator):
             hint=hint)
         resp = self.model.predict(prompt)
         ret = deepcopy(resp)
-        ret['text'] = text
+        ret['result'] = {}
+        ret['result']['text'] = text
         entity_map = {}
         pair_regex = GPTAnnotator.make_ner_extraction_regex(self.label_mapping.keys())
         for match in pair_regex.finditer(ret['response']):
@@ -101,12 +102,14 @@ class GPTAnnotator(BaseAnnotator):
             entity = matched.group()
             start, end = matched.span()
             entities.append((start, end, entity, entity_map[entity]))
-        ret['result'] = entities
+        ret['result']['entities'] = entities
         if formatter is not None:
             if formatter == NERFormatter.BIO:
-                ret['formatted_result'] = GPTAnnotator.format_ner_to_bio(ret['text'], ret['result'])
+                ret['result']['formatted_result'] = GPTAnnotator.format_ner_to_bio(
+                    ret['result']['text'], ret['result']['entities'])
             elif formatter == NERFormatter.Segment:
-                ret['formatted_result'] = GPTAnnotator.format_ner_to_segment(ret['text'], ret['result'])
+                ret['result']['formatted_result'] = GPTAnnotator.format_ner_to_segment(
+                    ret['result']['text'], ret['result']['entities'])
         return ret
 
     def tag(self, text: str, hint: Optional[str] = None, formatter=None):
