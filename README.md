@@ -17,13 +17,19 @@
 
 # Installation
 
-stable
-```
+**stable**
+```bash
 python -m pip install -U lanno
 ```
 
-latest
+For Chinese users, the index-url can be specified for a faster installation.
+
+```bash
+python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -U lanno
 ```
+
+**latest**
+```bash
 python -m pip install git+https://github.com/SeanLee97/lanno.git
 ```
 
