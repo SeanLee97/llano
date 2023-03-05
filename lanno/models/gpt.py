@@ -50,6 +50,10 @@ class GPTModel(BaseModel):
     @with_taken_time
     def predict(self, text: str) -> Dict:
         tokens = self.tokenizer.encode(text)
+        if len(tokens) > self.max_tokens:
+            raise ValueError(
+                f'OOT (Out Of Tokens)! the current input text has `{len(tokens)}` tokens, '
+                'which is greater than the max_tokens {self.max_tokens}')
         data = {}
         data['prompt'] = text
         if self.model == OpenAIModels.ChatGPT:
