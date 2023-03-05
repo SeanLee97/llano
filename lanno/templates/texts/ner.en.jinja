@@ -1,6 +1,9 @@
 You are a NER (Named-entity recognition) system, please help me with the NER task.
 Task: extract the entities and corresponding entity types from a given sentence.
-Only support {{ labels|length }} entity types, including: {{ labels|join(',') }}.
+Only support {{ labels|length }} entity types, including: {{ labels|join(', ') }}.
+{% if hint is not none %}
+Explanation and examples: {{ hint }}
+{% endif %}
 Output format: (entity, entity_type).
 
 Following is the given sentence: {{ text }}

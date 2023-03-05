@@ -2,6 +2,7 @@
 
 import os
 import re
+from copy import deepcopy
 from typing import Dict, Optional, List, Tuple
 
 from jinja2 import Template
@@ -26,7 +27,8 @@ class GPTAnnotator(BaseAnnotator):
         with open(os.path.join(TEMPLATE_DIR, 'texts', f'{task}.{language}.jinja')) as reader:
             self.template = Template(reader.read())
 
-    def _get_ner_segments(self, text: str, entities: List[str]) -> List[Tuple]:
+    @staticmethod
+    def get_all_ner_segments(text: str, entities: List[str]) -> List[Tuple]:
         prev_start = 0
         segments = []
         for start, end, entity, entity_type in entities:
@@ -38,8 +40,9 @@ class GPTAnnotator(BaseAnnotator):
             segments.append((text[prev_start:], 'O'))
         return segments
 
-    def format_ner_to_bio(self, text: str, entities: List[str]) -> str:
-        segments = self._get_ner_segments(text, entities)
+    @staticmethod
+    def format_ner_to_bio(text: str, entities: List[str]) -> str:
+        segments = GPTAnnotator.get_all_ner_segments(text, entities)
         ret = []
         for segment, label in segments:
             if label == 'O':
@@ -52,28 +55,35 @@ class GPTAnnotator(BaseAnnotator):
                 ret.append(head)
         return '\n'.join(ret)
 
-    def format_ner_to_segment(self, text: str, entities: List[str]) -> str:
-        segments = self._get_ner_segments(text, entities)
+    @staticmethod
+    def format_ner_to_segment(text: str, entities: List[str]) -> str:
+        segments = GPTAnnotator.get_all_ner_segments(text, entities)
         ret = []
         for segment, label in segments:
             ret.append(f'{segment}\t{label}')
         return '\n'.join(ret)
 
-    def ner(self, text: str, formatter: Optional[NERFormatter] = None):
-        if formatter is not None and formatter not in NERFormatter.list_attributes():
+    @staticmethod
+    def make_ner_extraction_regex(labels):
+        return re.compile(
+            r'\((?P<entity>((?!\)).)+)\,'  # entity
+            r'.*?(?P<entity_type>(%s)).*?\)' % '|'.join(  # entity_type
+                [re.escape(k) for k in labels]))
+
+    def ner(self, text: str, hint: Optional[str] = None, formatter: Optional[NERFormatter] = None):
+        if formatter is not None and formatter not in NERFormatter.values():
             raise ValueError(
                 f'Invalid formatter `{formatter}`, please specify formatter from NERFormatter for the NER task.')
-        params = {
-            'labels': self.label_mapping.keys(),
-            'text': text
-        }
-        prompt = self.template.render(**params)
-        ret = self.model.predict(prompt)
+        prompt = self.template.render(
+            labels=list(self.label_mapping.keys()),
+            text=text,
+            hint=hint)
+        resp = self.model.predict(prompt)
+        ret = deepcopy(resp)
         ret['text'] = text
         entity_map = {}
-        for match in re.finditer(
-            r'\((?P<entity>((?!\)).)+?)\,\s*(?P<entity_type>(%s))\s*\)' % '|'.join(
-                [re.escape(k) for k in self.label_mapping]), ret['response']):
+        pair_regex = GPTAnnotator.make_ner_extraction_regex(self.label_mapping.keys())
+        for match in pair_regex.finditer(ret['response']):
             entity, entity_type = match.group('entity'), match.group('entity_type')
             entity = re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', entity)
             entity_type = re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', entity_type)
@@ -82,6 +92,8 @@ class GPTAnnotator(BaseAnnotator):
             if entity not in text:
                 continue
             entity_map[entity] = self.label_mapping[entity_type]
+        if not entity_map:
+            return ret
         # find positions
         safe_entities = [re.escape(ent) for ent in entity_map]
         entities = []
@@ -92,16 +104,15 @@ class GPTAnnotator(BaseAnnotator):
         ret['result'] = entities
         if formatter is not None:
             if formatter == NERFormatter.BIO:
-                ret['formatted_result'] = self.format_ner_to_bio(ret['text'], ret['result'])
+                ret['formatted_result'] = GPTAnnotator.format_ner_to_bio(ret['text'], ret['result'])
             elif formatter == NERFormatter.Segment:
-                ret['formatted_result'] = self.format_ner_to_segment(ret['text'], ret['result'])
-
+                ret['formatted_result'] = GPTAnnotator.format_ner_to_segment(ret['text'], ret['result'])
         return ret
 
-    def tag(self, text: str, formatter=None):
+    def tag(self, text: str, hint: Optional[str] = None, formatter=None):
         text = text.replace('\n', '')
         if self.task == Tasks.NER:
-            return self.ner(text, formatter)
+            return self.ner(text, hint=hint, formatter=formatter)
 
-    def __call__(self, text: str, formatter=None):
-        return self.tag(text, formatter=formatter)
+    def __call__(self, text: str, hint: Optional[str] = None, formatter=None):
+        return self.tag(text, hint=hint, formatter=formatter)

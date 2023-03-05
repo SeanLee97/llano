@@ -15,6 +15,11 @@ class AttributeClass(ABCMeta):
         return [k for k in cls.__dict__.keys()
                 if not k.startswith('__') and not k.endswith('__') and k not in ['list_attributes']]
 
+    @classmethod
+    def values(cls):
+        return [v for k, v in cls.__dict__.items()
+                if not k.startswith('__') and not k.endswith('__') and k not in ['list_attributes']]
+
 
 class OpenAIModels(AttributeClass):
     '''
