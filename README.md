@@ -4,15 +4,18 @@
 
 
  <h4 align="center">
-  <a href="https://github.com/SeanLee97/lanno/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="lanno is released under the Apache 2.0 license." />
-  </a>
-  <a href="https://pypi.org/project/lanno/">
-    <img src="https://badge.fury.io/py/lanno.svg" alt="PyPI version" />
-  </a>
-  <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="http://makeapullrequest.com" />
-  </a>
+   <a href="https://github.com/SeanLee97/lanno/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="lanno is released under the Apache 2.0 license." />
+   </a>
+   <a href="https://pypi.org/project/lanno/">
+      <img src="https://badge.fury.io/py/lanno.svg" alt="PyPI version" />
+   </a>
+   <a href="http://makeapullrequest.com">
+      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="http://makeapullrequest.com" />
+   </a>
+   <a href="https://discord.gg/FQVfncf9k8">
+      <img src="https://img.shields.io/badge/Discord-Community-orange" alt="Community" />
+   </a>
 </h4>
 
 # Installation
@@ -284,5 +287,11 @@ ret = annotator(doc, hint='身份表示从事职位的头衔或社会地位等�
 WIP
 
 # Contribution
-Contributions are always welcome!
+
+<p align='center'>Contributions are always welcome!<br />Welcome to join our community!</p>
+
+<div align="center">
+ <a href="https://discord.gg/FQVfncf9k8"><img alt="Join us on Discord" src="https://img.shields.io/discord/1081865058306490469?style=for-the-badge"></a>
+</div>
+
 
