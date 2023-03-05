@@ -49,7 +49,7 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 | Task Name                 | Supporting Languages                       | Status |
 |---------------------------|-----------------------------------------|--------|
 | NER                       | English (EN), Simplifed Chinese (ZH_CN) |    👌   |
-| Text Classification (Binary, MultiClass)       |                 🏗️                        |    🏗️    |
+| Text Classification (Binary, MultiClass)       |   English (EN), Simplifed Chinese (ZH_CN)  |    👌    |
 | MultiLabel Classification |                   🏗️                      |   🏗️     |
 | Relation Extraction       |                    🏗️                     |    🏗️    |
 | Summarization       |                   🏗️                      |    🏗️    |
