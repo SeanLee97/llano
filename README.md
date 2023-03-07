@@ -57,6 +57,8 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 | Relation Extraction       |                    🏗️                     |    🏗️    |
 | Summarization       |                   🏗️                      |    🏗️    |
 | Text to SQL       |                   🏗️                      |    🏗️    |
+| Data Augmentation       |                   🏗️                      |    🏗️    |
+
 
 
 # Usage
