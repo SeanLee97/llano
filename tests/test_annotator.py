@@ -4,10 +4,10 @@ import pytest
 
 
 @pytest.mark.parametrize("test_input,labels,expected", [
-    ('(a, A), (a,A), ("a", B), ("a  , B), (a",  ,  "B),(a",  ,  \'B),(a"\',,,, ,  \'B), (a"\',,,, ,  \'B"    )',
-     ['A', 'B'], 
+    ('(a, A), (a,A), ("a", B), ("a  , B), (a",  ,  "B),(a",  ,  \'B),(a"\',,,, ,  \'B), (a"\',,,, ,  \'B"    ),(a,B/C)',
+     ['A', 'B', 'B/C'], 
      [('a', 'A'), ('a', 'A'), ('"a"', 'B'), ('"a  ', 'B'), ('a",  ', 'B'),
-      ('a",  ', 'B'), ('a"\',,,, ', 'B'), ('a"\',,,, ', 'B')]
+      ('a",  ', 'B'), ('a"\',,,, ', 'B'), ('a"\',,,, ', 'B'), ('a', 'B/C')]
     )
 ])
 def test_ner_regex(test_input, labels, expected):
