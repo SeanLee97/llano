@@ -65,14 +65,18 @@ class GPTAnnotator(BaseAnnotator):
         return '\n'.join(ret)
 
     @staticmethod
-    def make_ner_extraction_regex(labels):
+    def make_ner_extraction_regex(labels: List[str]):
+        # sort by label length to support overlap labels
+        labels = sorted(labels, key=lambda x: len(x), reverse=True)
         return re.compile(
             r'\((?P<entity>((?!\)).)+)\,'  # entity
             r'.*?(?P<entity_type>(%s)).*?\)' % '|'.join(  # entity_type
                 [re.escape(k) for k in labels]))
 
     @staticmethod
-    def make_classification_extraction_regex(labels):
+    def make_classification_extraction_regex(labels: List[str]):
+        # sort by label length to support overlap labels
+        labels = sorted(labels, key=lambda x: len(x), reverse=True)
         return re.compile(
             r'(%s)+' % '|'.join([re.escape(label) for label in labels])
         )
