@@ -15,9 +15,9 @@ class GPTModel(BaseModel):
     def __init__(self,
                  api_key: str,
                  model: OpenAIModels = OpenAIModels.ChatGPT,
-                 temperature: float = 0.7,
+                 temperature: float = 0.8,
                  max_tokens: int = 4000,
-                 top_p: float = 0.1,
+                 top_p: float = 1,
                  frequency_penalty: float = 0,
                  presence_penalty: float = 0,
                  stop: Union[str, None] = None,) -> None:
