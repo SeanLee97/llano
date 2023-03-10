@@ -61,7 +61,7 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 
 
 
-# Usage
+# 🚀 Quick Tour
 
 ## Examples
 
