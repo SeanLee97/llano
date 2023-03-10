@@ -35,6 +35,7 @@ class Tasks(AttributeClass):
     '''
     NER = 'ner'
     Classification = 'classification'
+    MultiLabelClassification = 'multilabel_classification'
 
 
 class Languages(AttributeClass):

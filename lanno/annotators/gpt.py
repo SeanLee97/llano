@@ -126,7 +126,8 @@ class GPTAnnotator(BaseAnnotator):
     def classification(self,
                        text: str,
                        hint: Optional[str] = None,
-                       formatter: Optional[ClassificationFormatter] = None):
+                       formatter: Optional[ClassificationFormatter] = None,
+                       is_multilabel: bool = False):
         if formatter is not None and formatter not in ClassificationFormatter.values():
             raise ValueError(
                 f'Invalid formatter `{formatter}`, '
@@ -143,8 +144,7 @@ class GPTAnnotator(BaseAnnotator):
         labels = label_regex.findall(ret['response'])
         if not labels:
             return ret
-        label = labels[0]
-        ret['result']['label'] = label
+        ret['result']['label'] = labels if is_multilabel else labels[0]
         if formatter is not None:
             if formatter == ClassificationFormatter.JSONL:
                 ret['result']['formatted_result'] = json.dumps(
@@ -156,7 +156,9 @@ class GPTAnnotator(BaseAnnotator):
         if self.task == Tasks.NER:
             return self.ner(text, hint=hint, formatter=formatter)
         elif self.task == Tasks.Classification:
-            return self.classification(text, hint=hint, formatter=formatter)
+            return self.classification(text, hint=hint, formatter=formatter, is_multilabel=False)
+        elif self.task == Tasks.MultiLabelClassification:
+            return self.classification(text, hint=hint, formatter=formatter, is_multilabel=True)
 
     def __call__(self, text: str, hint: Optional[str] = None, formatter=None):
         return self.tag(text, hint=hint, formatter=formatter)
