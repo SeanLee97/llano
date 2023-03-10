@@ -18,7 +18,7 @@
    </a>
 </h4>
 
-# Installation
+# ⬇️ Installation
 
 **stable**
 ```bash
@@ -38,7 +38,7 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 
 💡 Currently, supports `Python3.8+`. Due to `Python 3.7`'s [end-of-life](https://endoflife.date/python) on June 27, 2023, we no longer support it.
 
-# Features 📦
+# 📦 Features
 
 - 🕸 Converts unstructured data into structured data using powerful LLMs (Large Language Models).
 - 📑 Provides annotated data that can be used for further training or annotation refinement.
