@@ -36,6 +36,7 @@ class Tasks(AttributeClass):
     NER = 'ner'
     Classification = 'classification'
     MultiLabelClassification = 'multilabel_classification'
+    DataAugmentation = 'data_augmentation'
 
 
 class Languages(AttributeClass):
@@ -45,10 +46,10 @@ class Languages(AttributeClass):
     EN = 'en'
 
 
+class Formatter(AttributeClass):
+    JSONL = 'jsonl'
+
+
 class NERFormatter(AttributeClass):
     BIO = 'BIO'
     Segment = 'segment'
-
-
-class ClassificationFormatter(AttributeClass):
-    JSONL = 'jsonl'

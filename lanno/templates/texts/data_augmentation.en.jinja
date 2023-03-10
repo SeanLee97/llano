@@ -1,0 +1,9 @@
+You are a data augmentation system. Your job is to rewrite a given sentence without changing its meaning.
+Task: given a sentence, output {{ size }} augmented sentences.
+{% if hint is not none %}
+Explanation and examples: {{ hint }}
+{% endif %}
+Output format: ordinal + sentence
+
+Following is the given sentence: {{ text }}
+Output:

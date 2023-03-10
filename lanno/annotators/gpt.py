@@ -8,7 +8,7 @@ from typing import Dict, Optional, List, Tuple
 
 from jinja2 import Template
 
-from ..config import Tasks, Languages, TEMPLATE_DIR, NERFormatter, ClassificationFormatter
+from ..config import Tasks, Languages, Formatter, NERFormatter, TEMPLATE_DIR
 from ..models import GPTModel
 from .base import BaseAnnotator
 
@@ -17,8 +17,8 @@ class GPTAnnotator(BaseAnnotator):
     def __init__(self,
                  model: GPTModel,
                  task: Tasks,
-                 label_mapping: Dict,
                  language: Languages,
+                 label_mapping: Optional[Dict] = None,
                  **kwargs) -> None:
         super().__init__()
         self.model = model
@@ -81,6 +81,12 @@ class GPTAnnotator(BaseAnnotator):
             r'(%s)+' % '|'.join([re.escape(label) for label in labels])
         )
 
+    @staticmethod
+    def make_data_augmentation_regex():
+        return re.compile(
+            r'(?P<ordial>[0-9]+?)\.?(?P<sentence>.+)\n'
+        )
+
     def ner(self, text: str, hint: Optional[str] = None, formatter: Optional[NERFormatter] = None):
         if formatter is not None and formatter not in NERFormatter.values():
             raise ValueError(
@@ -126,12 +132,12 @@ class GPTAnnotator(BaseAnnotator):
     def classification(self,
                        text: str,
                        hint: Optional[str] = None,
-                       formatter: Optional[ClassificationFormatter] = None,
+                       formatter: Optional[Formatter] = None,
                        is_multilabel: bool = False):
-        if formatter is not None and formatter not in ClassificationFormatter.values():
+        if formatter is not None and formatter not in Formatter.values():
             raise ValueError(
                 f'Invalid formatter `{formatter}`, '
-                'please specify formatter from ClassificationFormatter for the NER task.')
+                'please specify formatter from Formatter for the classification task.')
         prompt = self.template.render(
             labels=list(self.label_mapping.keys()),
             text=text,
@@ -146,12 +152,40 @@ class GPTAnnotator(BaseAnnotator):
             return ret
         ret['result']['label'] = labels if is_multilabel else labels[0]
         if formatter is not None:
-            if formatter == ClassificationFormatter.JSONL:
+            if formatter == Formatter.JSONL:
                 ret['result']['formatted_result'] = json.dumps(
                     {'text': ret['result']['text'], 'label': ret['result']['label']}, ensure_ascii=False)
         return ret
 
-    def tag(self, text: str, hint: Optional[str] = None, formatter=None):
+    def data_augmentation(self,
+                          text: str,
+                          hint: Optional[str] = None,
+                          formatter: Optional[Formatter] = None,
+                          size: int = 1):
+        if formatter is not None and formatter not in Formatter.values():
+            raise ValueError(
+                f'Invalid formatter `{formatter}`, '
+                'please specify formatter from Formatter for the data augmentation task.')
+        prompt = self.template.render(
+            text=text,
+            hint=hint,
+            size=size)
+        resp = self.model.predict(prompt)
+        ret = deepcopy(resp)
+        ret['result'] = {}
+        ret['result']['text'] = text
+        regex = self.make_data_augmentation_regex()
+        sentences = []
+        for matched in regex.finditer(ret['response'].rstrip('\n') + '\n'):
+            sentences.append(matched.group('sentence').strip())
+        ret['result']['sentences'] = sentences
+        if formatter is not None:
+            if formatter == Formatter.JSONL:
+                ret['result']['formatted_result'] = json.dumps(
+                    {'text': ret['result']['text'], 'sentences': ret['result']['sentences']}, ensure_ascii=False)
+        return ret
+
+    def tag(self, text: str, hint: Optional[str] = None, formatter=None, **kwargs):
         text = text.replace('\n', '')
         if self.task == Tasks.NER:
             return self.ner(text, hint=hint, formatter=formatter)
@@ -159,6 +193,8 @@ class GPTAnnotator(BaseAnnotator):
             return self.classification(text, hint=hint, formatter=formatter, is_multilabel=False)
         elif self.task == Tasks.MultiLabelClassification:
             return self.classification(text, hint=hint, formatter=formatter, is_multilabel=True)
+        elif self.task == Tasks.DataAugmentation:
+            return self.data_augmentation(text, hint=hint, formatter=formatter, size=kwargs.get('size', 1))
 
-    def __call__(self, text: str, hint: Optional[str] = None, formatter=None):
-        return self.tag(text, hint=hint, formatter=formatter)
+    def __call__(self, text: str, hint: Optional[str] = None, formatter=None, **kwargs):
+        return self.tag(text, hint=hint, formatter=formatter, **kwargs)
