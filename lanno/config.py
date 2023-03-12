@@ -37,6 +37,7 @@ class Tasks(AttributeClass):
     Classification = 'classification'
     MultiLabelClassification = 'multilabel_classification'
     DataAugmentation = 'data_augmentation'
+    RelationExtraction = 'relation_extraction'
 
 
 class Languages(AttributeClass):

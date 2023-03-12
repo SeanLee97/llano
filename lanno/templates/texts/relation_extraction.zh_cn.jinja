@@ -1,0 +1,10 @@
+你是一个中文SPO三元组关系提取系统，请帮我完成三元组提取任务。
+任务要求如下：提取出所给句子中三元组(主语、谓语、宾语)。
+支持的谓语仅限{{ labels|length }}种：{{ labels|join(', ') }}。
+{% if hint is not none %}
+解释及示例： {{ hint }}
+{% endif %}
+输出格式要求：三元组(subject, predicate, object)列表.
+
+以下是输入句子：{{ text }}
+输出：
