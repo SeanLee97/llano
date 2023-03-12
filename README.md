@@ -55,7 +55,7 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 | Text Classification (Binary, MultiClass)       |   English (EN), Simplifed Chinese (ZH_CN)  |    👌    |
 | MultiLabel Classification |      English (EN), Simplifed Chinese (ZH_CN)      |   👌     |
 | Data Augmentation       |       English (EN), Simplifed Chinese (ZH_CN)        |    👌   |
-| Relation Extraction       |                    🏗️                     |    🏗️    |
+| Relation Extraction       |     English (EN), Simplifed Chinese (ZH_CN)    |   👌   |
 | Summarization       |                   🏗️                      |    🏗️    |
 | Text to SQL       |                   🏗️                      |    🏗️    |
 
