@@ -87,6 +87,21 @@ class GPTAnnotator(BaseAnnotator):
             r'(?P<ordial>[0-9]+?)\.?(?P<sentence>.+)\n'
         )
 
+    @staticmethod
+    def make_relation_extraction_regex(labels: List[str]):
+        # sort by label length to support overlap labels
+        labels = sorted(labels, key=lambda x: len(x), reverse=True)
+        label_concat = "|".join([re.escape(k) for k in labels])
+        return re.compile(
+            r'\((?P<subject>((?!\)).)+)\,'  # subject
+            rf'[\'"\s]*?(?P<predicate>({label_concat}))[\'"\s]*?\,'  # predicate
+            r'(?P<object>((?!\)).)+)\)'  # object
+        )
+
+    @staticmethod
+    def re_strip(text: str) -> str:
+        return re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', text)
+
     def ner(self, text: str, hint: Optional[str] = None, formatter: Optional[NERFormatter] = None):
         if formatter is not None and formatter not in NERFormatter.values():
             raise ValueError(
@@ -103,8 +118,8 @@ class GPTAnnotator(BaseAnnotator):
         pair_regex = GPTAnnotator.make_ner_extraction_regex(self.label_mapping.keys())
         for match in pair_regex.finditer(ret['response']):
             entity, entity_type = match.group('entity'), match.group('entity_type')
-            entity = re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', entity)
-            entity_type = re.sub(r'(^[\'"\s]+|[\'"\s]+$)', '', entity_type)
+            entity = self.re_strip(entity)
+            entity_type = self.re_strip(entity_type)
             if entity_type not in self.label_mapping:
                 continue
             if entity not in text:
@@ -185,6 +200,34 @@ class GPTAnnotator(BaseAnnotator):
                     {'text': ret['result']['text'], 'sentences': ret['result']['sentences']}, ensure_ascii=False)
         return ret
 
+    def relation_extraction(self,
+                            text: str,
+                            hint: Optional[str] = None,
+                            formatter: Optional[Formatter] = None):
+        if formatter is not None and formatter not in Formatter.values():
+            raise ValueError(
+                f'Invalid formatter `{formatter}`, '
+                'please specify formatter from Formatter for the classification task.')
+        prompt = self.template.render(
+            labels=list(self.label_mapping.keys()),
+            text=text,
+            hint=hint)
+        resp = self.model.predict(prompt)
+        ret = deepcopy(resp)
+        ret['result'] = {}
+        ret['result']['text'] = text
+        regex = self.make_relation_extraction_regex(list(self.label_mapping.keys()))
+        triples = []
+        for matched in regex.finditer(ret['response']):
+            triples.append((self.re_strip(matched.group('subject')),
+                            self.re_strip(matched.group('predicate')),
+                            self.re_strip(matched.group('object'))))
+        ret['result']['triples'] = triples
+        if formatter is not None:
+            if formatter == Formatter.JSONL:
+                ret['result']['formatted_result'] = json.dumps(ret['result'], ensure_ascii=False)
+        return ret
+
     def tag(self, text: str, hint: Optional[str] = None, formatter=None, **kwargs):
         text = text.replace('\n', '')
         if self.task == Tasks.NER:
@@ -195,6 +238,8 @@ class GPTAnnotator(BaseAnnotator):
             return self.classification(text, hint=hint, formatter=formatter, is_multilabel=True)
         elif self.task == Tasks.DataAugmentation:
             return self.data_augmentation(text, hint=hint, formatter=formatter, size=kwargs.get('size', 1))
+        elif self.task == Tasks.RelationExtraction:
+            return self.relation_extraction(text, hint=hint, formatter=formatter)
 
     def __call__(self, text: str, hint: Optional[str] = None, formatter=None, **kwargs):
         return self.tag(text, hint=hint, formatter=formatter, **kwargs)
