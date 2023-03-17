@@ -2,6 +2,8 @@
 
 <p align='center'>Let <strong style='color: #0a93f5'>L</strong>arge <strong style='color: #0a93f5'>Lan</strong>guage Models Serve As Data <strong style='color: #0a93f5'>Anno</strong>tators.</p>
 
+<p align='center'>Zero-shot/few-shot information extractor.</p>
+
 
  <h4 align="center">
    <a href="https://github.com/SeanLee97/llano/blob/main/LICENSE">
