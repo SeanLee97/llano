@@ -22,7 +22,7 @@ with open('dev-requirements.txt', encoding='utf-8') as f:
 
 
 setup(
-    name='lanno',
+    name='llano',
     version=__version__,
     description='Let Large Language Models Serve As Data Annotators.',
     long_description_content_type="text/markdown",
@@ -32,11 +32,11 @@ setup(
     author_email='xmlee97@gmail.com',
     license='Apache 2.0 License',
     platforms=['all'],
-    url='https://github.com/SeanLee97/lanno',
+    url='https://github.com/SeanLee97/llano',
     packages=find_packages(exclude=('test*', )),
     package_data={
         '': ['*.txt', '*.jinja'],
-        'lanno': ['templates/texts/*.jinja']
+        'llano': ['templates/texts/*.jinja']
     },
     classifiers=[
         'Intended Audience :: Developers',

@@ -3,8 +3,8 @@
 import os
 from pprint import pprint
 
-from lanno.config import Tasks, Languages, OpenAIModels, Formatter
-from lanno import GPTModel, GPTAnnotator
+from llano.config import Tasks, Languages, OpenAIModels, Formatter
+from llano import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())

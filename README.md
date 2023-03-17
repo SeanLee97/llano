@@ -1,14 +1,14 @@
-<p align='center'><img src='docs/LANNO-LOGO.png' style='width: 300px; height: 3 00px'/></p>
+<p align='center'><img src='assets/llano-logo.jpeg' style='width: 300px;'/></p>
 
-<p align='center'>Let Large <strong style='color: #0a93f5'>Lan</strong>guage Models Serve As Data <strong style='color: #0a93f5'>Anno</strong>tators.</p>
+<p align='center'>Let <strong style='color: #0a93f5'>L</strong>arge <strong style='color: #0a93f5'>Lan</strong>guage Models Serve As Data <strong style='color: #0a93f5'>Anno</strong>tators.</p>
 
 
  <h4 align="center">
-   <a href="https://github.com/SeanLee97/lanno/blob/main/LICENSE">
-      <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="lanno is released under the Apache 2.0 license." />
+   <a href="https://github.com/SeanLee97/llano/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="llano is released under the Apache 2.0 license." />
    </a>
-   <a href="https://pypi.org/project/lanno/">
-      <img src="https://badge.fury.io/py/lanno.svg" alt="PyPI version" />
+   <a href="https://pypi.org/project/llano/">
+      <img src="https://badge.fury.io/py/llano.svg" alt="PyPI version" />
    </a>
    <a href="http://makeapullrequest.com">
       <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="http://makeapullrequest.com" />
@@ -22,18 +22,18 @@
 
 **stable**
 ```bash
-python -m pip install -U lanno
+python -m pip install -U llano
 ```
 
 For Chinese users, the index-url can be specified for a faster installation.
 
 ```bash
-python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -U lanno
+python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -U llano
 ```
 
 **latest**
 ```bash
-python -m pip install git+https://github.com/SeanLee97/lanno.git
+python -m pip install git+https://github.com/SeanLee97/llano.git
 ```
 
 💡 Currently, supports `Python3.8+`. Due to `Python 3.7`'s [end-of-life](https://endoflife.date/python) on June 27, 2023, we no longer support it.
@@ -41,6 +41,7 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 # 📦 Features
 
 - 🕸 Converts unstructured data into structured data using powerful LLMs (Large Language Models).
+- 😎 Supports zero-shot, few-shot information extraction.
 - 📑 Provides annotated data that can be used for further training or annotation refinement.
 - 💡 API is simple to use and out of the box.
 - 🗂️ Supports a wide range of tasks.
@@ -68,8 +69,8 @@ python -m pip install git+https://github.com/SeanLee97/lanno.git
 ### English Example
 
 ```python
-from lanno.config import Tasks, Languages, OpenAIModels, NERFormatter
-from lanno import GPTModel, GPTAnnotator
+from llano.config import Tasks, Languages, OpenAIModels, NERFormatter
+from llano import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())
@@ -184,8 +185,8 @@ ret = annotator(doc, hint='the entity type `job` is job title such as CEO, found
 ### Chinese Example
 
 ```python
-from lanno.config import Tasks, Languages, OpenAIModels, NERFormatter
-from lanno import GPTModel, GPTAnnotator
+from llano.config import Tasks, Languages, OpenAIModels, NERFormatter
+from llano import GPTModel, GPTAnnotator
 
 print('All Supported Tasks:', Tasks.list_attributes())
 print('All Supported Languages:', Languages.list_attributes())

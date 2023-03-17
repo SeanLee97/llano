@@ -11,7 +11,7 @@ import pytest
     )
 ])
 def test_ner_regex(test_input, labels, expected):
-    from lanno import GPTAnnotator
+    from llano import GPTAnnotator
 
     regex = GPTAnnotator.make_ner_extraction_regex(labels)
     pairs = []
@@ -36,7 +36,7 @@ def test_ner_regex(test_input, labels, expected):
     )
 ])
 def test_relation_extraction_regex(test_input, labels, expected):
-    from lanno import GPTAnnotator
+    from llano import GPTAnnotator
 
     regex = GPTAnnotator.make_relation_extraction_regex(labels)
     triples = []
