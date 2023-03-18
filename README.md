@@ -195,8 +195,8 @@ print('All Supported Languages:', Languages.list_attributes())
 print('All Supported NERFormatter:', NERFormatter.list_attributes())
 print('All Supported OpenAIModels:', OpenAIModels.list_attributes())
 
-api_key = 'Your API Key'
-model = GPTModel(api_key, model=OpenAIModels.ChatGPT)
+api_keys = ['Your API Keys']
+model = GPTModel(api_keys, model=OpenAIModels.ChatGPT)
 annotator = GPTAnnotator(model,
                          task=Tasks.NER,
                          language=Languages.ZH_CN,
