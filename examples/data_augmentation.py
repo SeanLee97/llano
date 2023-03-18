@@ -11,8 +11,8 @@ print('All Supported Languages:', Languages.list_attributes())
 print('All Supported Formatter:', Formatter.list_attributes())
 print('All Supported OpenAIModels:', OpenAIModels.list_attributes())
 
-api_key = os.getenv('OPENAI_KEY')
-model = GPTModel(api_key, model=OpenAIModels.ChatGPT)
+api_keys = [os.getenv('OPENAI_KEY')]
+model = GPTModel(api_keys, model=OpenAIModels.ChatGPT)
 
 # 1. english example
 annotator = GPTAnnotator(model,
